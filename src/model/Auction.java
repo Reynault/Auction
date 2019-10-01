@@ -56,7 +56,7 @@ public class Auction extends Observable {
     }
 
     private void addEntry(String message){
-        logger.addEntry(this.idAuction, getArticleName(), String.valueOf(getLastBid()), false);
+        logger.addEntry(this.idAuction, getArticleName(), message, start);
     }
 
     private void endingCurrentAuction(){
@@ -121,14 +121,13 @@ public class Auction extends Observable {
         return currentArticle.hasContainer();
     }
 
-    public boolean changeToContainer(){
-        boolean res = false;
-        endingCurrentAuction();
+    public void changeToContainer(){
         if(hasContainer()){
-            res = true;
             currentArticle = currentArticle.getContainer();
+            lastBid = 0;
+            addEntry("Change to container");
+            notifyOb(ConstantManager.CHANGETOCONTAINER);
         }
-        return res;
     }
 
     public boolean isSoldOut() {

@@ -83,6 +83,11 @@ public class BidderView extends BaseView{
                     validate.setEnabled(false);
                 }
                 break;
+            case CHANGETOCONTAINER:
+                if(!getModel().hasContainer()) {
+                    changeToContainer.setEnabled(false);
+                }
+                break;
         }
     }
 }

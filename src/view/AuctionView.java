@@ -37,8 +37,6 @@ public class AuctionView extends BaseView{
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                stop.setEnabled(true);
-                start.setEnabled(false);
                 getController().start();
             }
         });
@@ -46,8 +44,6 @@ public class AuctionView extends BaseView{
         stop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                stop.setEnabled(false);
-                start.setEnabled(true);
                 getController().stop();
             }
         });
@@ -66,9 +62,16 @@ public class AuctionView extends BaseView{
                 getLastBid().setText("Last bid: " + getModel().getLastBid());
                 break;
             case STOP:
+                stop.setEnabled(false);
                 if(getModel().isSoldOut()){
                     start.setEnabled(false);
+                }else{
+                    start.setEnabled(true);
                 }
+                break;
+            case START:
+                stop.setEnabled(true);
+                start.setEnabled(false);
                 break;
         }
     }

@@ -101,6 +101,11 @@ public abstract class BaseView implements Observer {
                     getDepot().setText("");
                 }
                 break;
+            case CHANGETOCONTAINER:
+                getArticle().setText("Article: " + getModel().getArticleName());
+                getLastBid().setText("Last bid: " + getModel().getLastBid());
+                getPrice().setText("Price: " + getModel().getArticlePrice());
+                break;
         }
     }
 
