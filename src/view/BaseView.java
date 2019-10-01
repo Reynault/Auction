@@ -1,17 +1,19 @@
 package view;
 
 import controller.MainAuctionController;
+import manager.ConstantManager;
 import model.Auction;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Observable;
 import java.util.Observer;
 
 public abstract class BaseView implements Observer {
 
     protected static final int WIDTH = 200;
-    protected static final int HEIGHT = 200;
+    protected static final int HEIGHT = 250;
 
     private JFrame frame;
     private JLabel article = new JLabel();
@@ -80,5 +82,29 @@ public abstract class BaseView implements Observer {
 
     public Auction getModel() {
         return model;
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        ConstantManager parameter = (ConstantManager) o;
+        switch (parameter){
+            case STOP:
+                if (!getModel().isSoldOut()) {
+                    getArticle().setText("Article: " + getModel().getArticleName());
+                    getLastBid().setText("Last bid: " + getModel().getLastBid());
+                    getPrice().setText("Price: " + getModel().getArticlePrice());
+                    getDepot().setText("Depot: "+getModel().getArticleDepot());
+                }else{
+                    getArticle().setText("Sold out");
+                    getPrice().setText("");
+                    getLastBid().setText("");
+                    getDepot().setText("");
+                }
+                break;
+        }
+    }
+
+    public JLabel getDepot() {
+        return depot;
     }
 }

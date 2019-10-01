@@ -28,4 +28,9 @@ public class MainAuctionController {
         }
     }
 
+    public boolean changeToContainer(){
+        boolean res = model.changeToContainer();
+        model.start();
+        return res;
+    }
 }

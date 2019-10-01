@@ -40,7 +40,7 @@ public class Auction extends Observable {
         if (start) {
             if (value > lastBid) {
                 lastBid = value;
-                logger.addEntry(10, getArticleName(), String.valueOf(getLastBid()), true);
+                addEntry(String.valueOf(getLastBid()));
                 notifyOb(ConstantManager.OVERBID);
             }
         }
@@ -55,21 +55,32 @@ public class Auction extends Observable {
         notifyOb(ConstantManager.START);
     }
 
-    public void stop() {
+    private void addEntry(String message){
+        logger.addEntry(this.idAuction, getArticleName(), String.valueOf(getLastBid()), false);
+    }
+
+    private void endingCurrentAuction(){
         start = false;
         if(getLastBid() > getArticlePrice()) {
-            logger.addEntry(this.idAuction, getArticleName(), String.valueOf(getLastBid()), false);
+            addEntry(String.valueOf(getLastBid()));
         }else{
-            logger.addEntry(this.idAuction, getArticleName(), "auction failed", false);
+            addEntry("auction failed");
         }
+        idAuction ++;
+        lastBid = 0;
+    }
+
+    public void stop() {
+
+        endingCurrentAuction();
+
         if(iterator.hasNext()){
             currentArticle = iterator.next();
             soldOut = true;
         }else{
             soldOut = false;
         }
-        idAuction ++;
-        lastBid = 0;
+
         notifyOb(ConstantManager.STOP);
     }
 
@@ -104,6 +115,20 @@ public class Auction extends Observable {
             price = d.getPrice(currentArticle, price);
         }
         return price;
+    }
+
+    public boolean hasContainer(){
+        return currentArticle.hasContainer();
+    }
+
+    public boolean changeToContainer(){
+        boolean res = false;
+        endingCurrentAuction();
+        if(hasContainer()){
+            res = true;
+            currentArticle = currentArticle.getContainer();
+        }
+        return res;
     }
 
     public boolean isSoldOut() {

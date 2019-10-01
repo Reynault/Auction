@@ -58,6 +58,7 @@ public class AuctionView extends BaseView{
 
     @Override
     public void update(Observable observable, Object o) {
+        super.update(observable, o);
         ConstantManager parameter = (ConstantManager) o;
         switch(parameter){
             case OVERBID:
@@ -65,14 +66,7 @@ public class AuctionView extends BaseView{
                 getLastBid().setText("Last bid: " + getModel().getLastBid());
                 break;
             case STOP:
-                if(!getModel().isSoldOut()){
-                    getArticle().setText("Article: " + getModel().getArticleName());
-                    getLastBid().setText("Last bid: " + getModel().getLastBid());
-                    getPrice().setText("Price: " + getModel().getArticlePrice());
-                }else{
-                    getArticle().setText("Sold out");
-                    getPrice().setText("");
-                    getLastBid().setText("");
+                if(getModel().isSoldOut()){
                     start.setEnabled(false);
                 }
                 break;

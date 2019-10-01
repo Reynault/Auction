@@ -14,6 +14,7 @@ import java.util.Observable;
 public class BidderView extends BaseView{
     private JTextPane bid;
     private JButton validate;
+    private JButton changeToContainer;
 
     public BidderView(String name, Auction model, MainAuctionController controller) {
         super(name, model, controller);
@@ -25,18 +26,26 @@ public class BidderView extends BaseView{
 
         bid = new JTextPane();
         validate = new JButton("Bid");
+        changeToContainer = new JButton("Get container");
         
         JPanel contentPane = (JPanel) getFrame().getContentPane();
         contentPane.add(bid);
         contentPane.add(validate);
+        contentPane.add(changeToContainer);
 
         bid.setAlignmentX(Component.CENTER_ALIGNMENT);
         validate.setAlignmentX(Component.CENTER_ALIGNMENT);
+        changeToContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        bid.setPreferredSize(new Dimension((int)(WIDTH * 0.8), 10));
-        bid.setBorder(new EmptyBorder(0, 0,10,0));
-        validate.setPreferredSize(new Dimension((int)(WIDTH * 0.8), 20));
         validate.setEnabled(false);
+        changeToContainer.setEnabled(false);
+
+        changeToContainer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                getController().changeToContainer();
+            }
+        });
 
         validate.addActionListener(new ActionListener() {
             @Override
@@ -53,6 +62,7 @@ public class BidderView extends BaseView{
 
     @Override
     public void update(Observable observable, Object o) {
+        super.update(observable, o);
         ConstantManager parameter = (ConstantManager) o;
         switch (parameter){
             case OVERBID:
@@ -62,17 +72,14 @@ public class BidderView extends BaseView{
             case START:
                 // if start, change bid button state to enabled
                 validate.setEnabled(true);
+                if(getModel().hasContainer()){
+                    changeToContainer.setEnabled(true);
+                }
                 break;
             case STOP:
                 validate.setEnabled(false);
-                if (!getModel().isSoldOut()) {
-                    getArticle().setText("Article: " + getModel().getArticleName());
-                    getLastBid().setText("Last bid: " + getModel().getLastBid());
-                    getPrice().setText("Price: " + getModel().getArticlePrice());
-                }else{
-                    getArticle().setText("Sold out");
-                    getPrice().setText("");
-                    getLastBid().setText("");
+                changeToContainer.setEnabled(false);
+                if (getModel().isSoldOut()) {
                     validate.setEnabled(false);
                 }
                 break;

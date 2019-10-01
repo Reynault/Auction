@@ -27,4 +27,12 @@ public abstract class Article {
     public abstract int getPrice();
 
     public abstract String getName();
+
+    public boolean hasContainer(){
+        return container != null;
+    }
+
+    public Article getContainer(){
+        return container;
+    }
 }
